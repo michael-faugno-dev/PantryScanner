@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pantry Monitor - Smart Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">🏠</div>
+                <h1>Pantry<span>Monitor</span></h1>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-page="inventory">
+                    <span class="icon">📦</span>
+                    <span>Inventory</span>
+                </a>
+                <a href="#" class="nav-item" data-page="history">
+                    <span class="icon">📈</span>
+                    <span>History</span>
+                </a>
+                <a href="#" class="nav-item" data-page="settings">
+                    <span class="icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>System Active</span>
+                </div>
+                <div class="version">v1.0.0</div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-left">
+                    <h2 class="page-title">Dashboard</h2>
+                    <p class="page-subtitle">Real-time pantry monitoring</p>
+                </div>
+                <div class="header-right">
+                    <div class="last-updated">
+                        <span class="label">Last Scan:</span>
+                        <span class="value" id="lastScanTime">Loading...</span>
+                    </div>
+                    <button class="btn-refresh" onclick="refreshData()">
+                        <span class="icon">🔄</span>
+                        Refresh
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="content-area">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">📦</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Items</div>
+                            <div class="stat-value" id="statTotalItems">--</div>
+                            <div class="stat-change positive">↑ Active</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">📸</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Scans</div>
+                            <div class="stat-value" id="statTotalScans">--</div>
+                            <div class="stat-change">All time</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">📈</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Changes This Week</div>
+                            <div class="stat-value" id="statChanges">--</div>
+                            <div class="stat-change">Last 7 days</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">💰</div>
+                        <div class="stat-content">
+                            <div class="stat-label">API Cost</div>
+                            <div class="stat-value" id="statCost">--</div>
+                            <div class="stat-change">Total</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Grid -->
+                <div class="main-grid">
+                    <!-- Latest Image -->
+                    <div class="card latest-image-card">
+                        <div class="card-header">
+                            <h3>Latest Scan</h3>
+                            <span class="card-badge" id="imageTimestamp">Just now</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="image-container">
+                                <img id="latestImage" src="/image/current.jpg" alt="Latest pantry scan">
+                                <div class="image-overlay">
+                                    <button class="btn-view-fullscreen" onclick="viewFullscreen()">
+                                        <span>🔍</span> View Full Size
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Inventory -->
+                    <div class="card inventory-card">
+                        <div class="card-header">
+                            <h3>Current Inventory</h3>
+                            <span class="card-badge" id="itemCount">0 items</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="search-bar">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" id="searchInput" placeholder="Search items..." onkeyup="filterItems()">
+                            </div>
+                            <div class="inventory-list" id="inventoryList">
+                                <div class="loading-spinner">Loading inventory...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card activity-card">
+                    <div class="card-header">
+                        <h3>Recent Scans</h3>
+                        <a href="#" class="link-view-all">View All →</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-list" id="recentScans">
+                            <div class="loading-spinner">Loading recent scans...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Fullscreen Image Modal -->
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Full size image">
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
