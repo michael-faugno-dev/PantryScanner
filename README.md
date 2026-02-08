@@ -219,18 +219,6 @@ pantry-monitor/
 └── pantry_images/         # Stored webcam captures
 ```
 
-## Security Notes
-
-- **Never commit `pantry_config.py`** with real API keys
-- Add to `.gitignore`:
-  ```
-  pantry_config.py
-  pantry_images/
-  *.pyc
-  __pycache__/
-  ```
-- Use environment variables for production deployments
-
 ## Future Enhancements
 
 - [ ] Expiration date tracking
