@@ -2,7 +2,7 @@
 
 An automated inventory tracking system that uses webcam capture, Claude AI vision analysis, and PostgreSQL to monitor pantry changes in real-time.
 
-![Pantry Dashboard](assets/pantry-dashboard.png)
+![Pantry Dashboard](pantry-dashboard.png)
 
 ## Overview
 
